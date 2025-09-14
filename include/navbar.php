@@ -3,10 +3,10 @@
 session_start();
 include "./database/db.php";
 
-if (isset($_SESSION['id'])) {
-    $userId = $_SESSION['id'];
-    $user = $db->query("SELECT * FROM users WHERE id=$userId")->fetch();
-    if($user['type'] == 'admin'){
+if (!empty($_SESSION['id'])) {
+    $sessionId = $_SESSION['id'];
+    $user = $db->query("SELECT * FROM users WHERE id=$sessionId")->fetch();
+    if ($user['type'] == 'admin') {
         $path = "./admin/admin-panel-home.php";
     } elseif ($user['type'] == 'writer') {
         $path = "./writer/writer-panel-home.php";
@@ -54,32 +54,31 @@ $categories = $db->query("SELECT * FROM categories");
                 </div>
             </div>
             <?php
-            if(empty($userId)):
-            ?>
-            <div class="me-auto">
-                <a href="./sign-in.php" class="btn btn-warning">عضویت</a>
-                <a href="./login.php" class="btn btn-success">ورود</a>
-            </div>
-            <?php
-            else:
-            ?>
-            <div class="navbar-nav me-auto">
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <?= $user['name'] ?>
-                    </a>
-                    <ul class="dropdown-menu text-end">
-                        <li><a class="dropdown-item"
-                                href=<?= $path ?>>پنل کاربری</a>
-                            </li>
-                        <li><a class="dropdown-item text-danger"
-                                href="./logout.php">خروج</a>
-                        </li>
-                    </ul>
+            if (empty($sessionId)):
+                ?>
+                <div class="me-auto">
+                    <a href="./sign-in.php" class="btn btn-warning">عضویت</a>
+                    <a href="./login.php" class="btn btn-success">ورود</a>
                 </div>
-            </div>
-            <?php
+                <?php
+            else:
+                ?>
+                <div class="navbar-nav me-auto">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <?= $user['name'] ?>
+                        </a>
+                        <ul class="dropdown-menu text-end">
+                            <li><a class="dropdown-item" href=<?= $path ?>>پنل کاربری</a>
+                            </li>
+                            <li><a class="dropdown-item text-danger"
+                                    href="./logout.php">خروج</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <?php
             endif
             ?>
         </div>

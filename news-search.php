@@ -7,7 +7,7 @@ if (isset($_GET['setTitle'])) {
     $newsCard->execute(["title" => "%$title%", "status" => "confirmation"]);
 } elseif (isset($_GET['setName'])) {
     $name = $_GET['name'];
-    $userId = $db->query("SELECT * FROM users WHERE name LIKE '%$name%'");
+    $userId = $db->query("SELECT * FROM users WHERE name LIKE '%$name%' ORDER BY id DESC");
     $newsCard = $db->query("SELECT * FROM news WHERE status = 'confirmation' ORDER BY id DESC");
 } elseif (isset($_GET['setDate'])) {
     $date = $_GET['date'];
@@ -119,7 +119,7 @@ if (isset($_GET['setTitle'])) {
                             </div>
                         <?php endif;
                     endforeach;
-                    $newsCard = $db->query("SELECT * FROM news ORDER BY id DESC");
+                    $newsCard = $db->query("SELECT * FROM news WHERE status = 'confirmation'");
                 endforeach;
             else:
                 echo "<p class='alert alert-danger'>خبری یافت نشد.</p>";

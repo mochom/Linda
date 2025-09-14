@@ -11,8 +11,6 @@ if (isset($_GET['setTitle'])) {
     $name = $_GET['name'];
     $userId = $db->query("SELECT * FROM users WHERE name LIKE '%$name%' ORDER BY id DESC");
     $newsCard = $db->query("SELECT * FROM news WHERE status = 'confirmation' AND category_id = $categoryId ORDER BY id DESC");
-    $count = $db->query("SELECT count(id) AS 'number' FROM news WHERE category_id = $categoryId")->fetch();
-    //echo $count['number'];
 } elseif (isset($_GET['setDate'])) {
     $categoryId = $_GET['setDate'];
     $date = $_GET['date'];
@@ -60,7 +58,7 @@ if (isset($_GET['setTitle'])) {
 
     <div class="container mt-3">
         <div class="row gy-3">
-            <p class="fs-5 fw-bolder">اخبار</p>
+            <p class="fs-5 fw-bolder">اخبار دسته بندی</p>
             <?php if ($newsCard->rowCount() > 0):
                 foreach ($newsCard as $new):
                     $categoryId = $new['category_id'];
@@ -97,11 +95,9 @@ if (isset($_GET['setTitle'])) {
     <div class="container mt-3">
         <div class="row gy-3">
             <p class="fs-5 fw-bolder">اخبار دسته بندی</p>
-            <?php $counter = 0;
-            $foundIt = 0;
+            <?php $foundIt = 0;
             if ($userId->rowCount() > 0):
                 foreach ($userId as $user):
-                    $counter = 0;
                     foreach ($newsCard as $new):
                         if ($user['id'] == $new['writer_id']):
                             $foundIt = 1;
@@ -127,14 +123,11 @@ if (isset($_GET['setTitle'])) {
                                 </a>
                             </div>
                             <?php
-                        else:
-                            $counter++;
                         endif;
                         $newsCard = $db->query("SELECT * FROM news WHERE status = 'confirmation' AND category_id = $categoryId ORDER BY id DESC");
                     endforeach;
                 endforeach;
-                //echo $counter;
-                if ($counter == $count['number'] && $foundIt == 0):
+                if ($foundIt == 0):
                     echo "<p class='alert alert-danger'>خبری یافت نشد.</p>";
                 endif;
             else:
